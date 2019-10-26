@@ -11,19 +11,20 @@
       </section>
 
       <section>
-        <textarea v-model="input" disabled></textarea>
+        <textarea v-model="input"></textarea>
       </section>
 
       <section>
         <ButtonIcon icon="⬆️" @method="addIcon" />
-        <ButtonIcon icon="➡️" @method="addIcon" />
         <ButtonIcon icon="⬇️" @method="addIcon" />
         <ButtonIcon icon="⬅️" @method="addIcon" />
+        <ButtonIcon icon="➡️" @method="addIcon" />
       </section>
 
       <section>
-        <button @click="play">再生</button>
-        <button @click="reset">ぜんぶけす</button>
+        <button @click="play">うごかす</button>
+        <button @click="pause">とめる</button>
+        <!-- <button @click="reset">ぜんぶけす</button> -->
       </section>
     </main>
 
@@ -52,6 +53,7 @@ export default {
       input: '',
       code: [],
       output: '',
+      instance: null,
       nowFrame: 0,
       maxFrame: 0,
     }
@@ -66,6 +68,16 @@ export default {
       this.input = this.input + icon
     },
 
+    play() {
+      this.code = split(this.input)
+      this.maxFrame = this.code.length
+      this.command(this.code[this.nowFrame])
+    },
+
+    pause() {
+      this.instance.pause()
+    },
+
     reset() {
       this.input = ''
       this.code = []
@@ -76,15 +88,13 @@ export default {
         targets: '.avatar',
         translateX: 0,
         translateY: 0,
-        duration: 500,
-      })
-    },
+        duration: 1000,
+        easing: 'easeInBack',
 
-    play() {
-      this.code = split(this.input)
-      console.log(this.code)
-      this.maxFrame = this.code.length
-      this.command(this.code[this.nowFrame])
+        complete: () => {
+          this.output = ''
+        }
+      })
     },
 
     command(val) {
@@ -110,6 +120,8 @@ export default {
       let poX
       let poY
       let len = 50
+      this.nowFrame++
+      console.log(`アニメ ${this.nowFrame} 回目`)
 
       switch(type) {
         case 'top':
@@ -127,21 +139,20 @@ export default {
         default:
           this.output = '🚧アニメーションエラーです'
       }
-      this.nowFrame++
 
-      anime({
+      this.instance = anime({
         targets: '.avatar',
         translateX: poX,
         translateY: poY,
-        duration: 300,
+        duration: 200,
+        easing: 'easeInOutBack',
 
         complete: () => {
           if(this.nowFrame < this.maxFrame) { // アニメーション終了後、次のアニメーションを開始
             this.command(this.code[this.nowFrame])
-            console.log(`アニメ ${this.nowFrame} 回目`)
           } else if(this.nowFrame === this.maxFrame) { //アニメーション最後
+            this.output = '終了でーす'
             this.reset()
-            console.log('終了')
           }
         }
       })
