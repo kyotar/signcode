@@ -5,7 +5,7 @@
     </header>
 
     <main>
-      <p>メッセージ {{ output }}</p>
+      <p>{{ isPlaying }}メッセージ {{ output }}</p>
       <section>
         <img src="./assets/img/logo.png" class="avatar" alt="avatar">
       </section>
@@ -22,8 +22,8 @@
       </section>
 
       <section>
-        <button @click="play">うごかす</button>
-        <button @click="pause">とめる</button>
+        <button @click="action" :disabled="isDisabled || emptyInput || isMaxFrame">{{ btnLabel }}</button>
+        <!-- <button @click="pause">とめる</button> -->
         <!-- <button @click="reset">ぜんぶけす</button> -->
       </section>
     </main>
@@ -56,11 +56,26 @@ export default {
       instance: null,
       nowFrame: 0,
       maxFrame: 0,
+      isPlaying: false,
+      isDisabled: false,
     }
   },
 
-  mounted() {
+  computed: {
+    btnLabel() {
+      return this.isPlaying ? 'とめる' : 'うごかす'
+    },
 
+    emptyInput() {
+      return !(split(this.input).length)
+    },
+
+    isMaxFrame() {
+      return (this.nowFrame === this.maxFrame) && (this.maxFrame > 0)
+    },
+  },
+
+  mounted() {
   },
 
   methods: {
@@ -68,14 +83,24 @@ export default {
       this.input = this.input + icon
     },
 
+    action() {
+      if(this.isPlaying) {
+        this.pause()
+      } else {
+        this.play()
+      }
+    },
+
     play() {
       this.code = split(this.input)
       this.maxFrame = this.code.length
+      this.isPlaying = true
       this.command(this.code[this.nowFrame])
     },
 
     pause() {
       this.instance.pause()
+      this.isPlaying = false
     },
 
     reset() {
@@ -83,6 +108,7 @@ export default {
       this.code = []
       this.nowFrame = 0
       this.maxFrame = 0
+      this.isDisabled = true
 
       anime({
         targets: '.avatar',
@@ -91,8 +117,15 @@ export default {
         duration: 1000,
         easing: 'easeInBack',
 
+        begin: () => {
+          this.isDisabled = true
+
+        },
+
         complete: () => {
           this.output = ''
+          this.isPlaying = false
+          this.isDisabled = false
         }
       })
     },
@@ -112,7 +145,7 @@ export default {
           this.animate('right')
           break
         default:
-          this.output = '🚧コマンドエラーです'
+          this.output = `🚧コマンドエラーです。- ${val} -`
       }
     },
 
