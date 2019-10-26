@@ -1,29 +1,37 @@
 # signcode
 
-## Project setup
-```
-npm install
-```
+## Command
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### Properties
 
-### Compiles and minifies for production
-```
-npm run build
-```
+| ⬆️    | 上に移動       |
+| ---- | -------------- |
+| ⬇️    | 下に移動       |
+| ⬅️    | 左に移動       |
+| ➡️    | 右に移動       |
+| 🔄    | 横回転         |
+| 🔃    | 縦回転         |
+| 🤾    | ジャンプする   |
+| ⏱️    | 一定時間止まる |
+| 🗣️    | 音声で喋る     |
+| 💬    | 吹き出しで喋る |
+| 👻    | 一定時間消える |
+| 👬    | 分身           |
+|      |                |
 
-### Run your tests
-```
-npm run test
-```
+### Value
 
-### Lints and fixes files
-```
-npm run lint
-```
+| 1️⃣〜9️⃣ | 数値       |
+| ---- | ---------- |
+| 🎲    | 1〜9の乱数 |
+|      |            |
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 制御
+
+| ↪️n <code>↩️ | n回数codeを実行する |
+| ---------- | ------------------- |
+| 🚧          | エラー              |
+|            |                     |
+
+
+
