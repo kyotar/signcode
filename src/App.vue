@@ -7,9 +7,7 @@
     <main>
       <p>メッセージ {{ output }}</p>
       <section>
-        <transition name="fade">
-          <img src="./assets/img/logo.png" class="avatar" alt="avatar">
-        </transition>
+        <img src="./assets/img/logo.png" class="avatar" alt="avatar">
       </section>
 
       <section>
@@ -35,8 +33,11 @@
 </template>
 
 <script>
-import ButtonIcon from './components/ButtonIcon.vue'
 import split from 'graphemesplit'
+import anime from 'animejs/lib/anime.es.js'
+import ButtonIcon from './components/ButtonIcon.vue'
+
+
 
 export default {
   name: 'app',
@@ -50,6 +51,22 @@ export default {
       code: '',
       output: '',
     }
+  },
+
+  mounted(){
+    anime({
+      targets: '.avatar',
+      translateX: 250,
+      rotate: '1turn',
+      duration: 1000,
+
+      begin: function(anim) {
+        console.log(111, anim.began)
+      },
+      complete: function(anim) {
+        console.log(222, anim.completed)
+      },
+    })
   },
 
   methods: {
@@ -82,13 +99,6 @@ export default {
   .avatar {
     width: 100px;
     height: auto;
-  }
-
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
   }
 }
 
