@@ -11,7 +11,7 @@
       </section>
 
       <section>
-        <textarea v-model="code" disabled></textarea>
+        <textarea v-model="input" disabled></textarea>
       </section>
 
       <section>
@@ -23,6 +23,7 @@
 
       <section>
         <button @click="play">再生</button>
+        <button @click="reset">ぜんぶけす</button>
       </section>
     </main>
 
@@ -48,44 +49,102 @@ export default {
 
   data() {
     return {
-      code: '',
+      input: '',
+      code: [],
       output: '',
+      nowFrame: 0,
+      maxFrame: 0,
     }
   },
 
-  mounted(){
-    anime({
-      targets: '.avatar',
-      translateX: 250,
-      rotate: '1turn',
-      duration: 1000,
+  mounted() {
 
-      begin: function(anim) {
-        console.log(111, anim.began)
-      },
-      complete: function(anim) {
-        console.log(222, anim.completed)
-      },
-    })
   },
 
   methods: {
     addIcon(icon) {
-      this.code = this.code + icon
+      this.input = this.input + icon
+    },
+
+    reset() {
+      this.input = ''
+      this.code = []
+      this.nowFrame = 0
+      this.maxFrame = 0
+
+      anime({
+        targets: '.avatar',
+        translateX: 0,
+        translateY: 0,
+        duration: 500,
+      })
     },
 
     play() {
-      this.command(split(this.code)[0])
+      this.code = split(this.input)
+      console.log(this.code)
+      this.maxFrame = this.code.length
+      this.command(this.code[this.nowFrame])
     },
 
     command(val) {
       switch(val) {
+        case '⬆️':
+          this.animate('top')
+          break
         case '⬇️':
-          console.log('下')
+          this.animate('bottom')
+          break
+        case '⬅️':
+          this.animate('left')
+          break
+        case '➡️':
+          this.animate('right')
           break
         default:
-          this.output = '🚧エラーです'
+          this.output = '🚧コマンドエラーです'
       }
+    },
+
+    animate(type) {
+      let poX
+      let poY
+      let len = 50
+
+      switch(type) {
+        case 'top':
+          poY = `-=${len}px`
+          break
+        case 'bottom':
+          poY = `+=${len}px`
+          break
+        case 'left':
+          poX = `-=${len}px`
+          break
+        case 'right':
+          poX = `+=${len}px`
+          break
+        default:
+          this.output = '🚧アニメーションエラーです'
+      }
+      this.nowFrame++
+
+      anime({
+        targets: '.avatar',
+        translateX: poX,
+        translateY: poY,
+        duration: 300,
+
+        complete: () => {
+          if(this.nowFrame < this.maxFrame) { // アニメーション終了後、次のアニメーションを開始
+            this.command(this.code[this.nowFrame])
+            console.log(`アニメ ${this.nowFrame} 回目`)
+          } else if(this.nowFrame === this.maxFrame) { //アニメーション最後
+            this.reset()
+            console.log('終了')
+          }
+        }
+      })
     },
   },
 }
