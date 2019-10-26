@@ -114,6 +114,7 @@ export default {
         targets: '.avatar',
         translateX: 0,
         translateY: 0,
+        scale: 1,
         duration: 1000,
         easing: 'easeInBack',
 
@@ -152,6 +153,7 @@ export default {
     animate(type) {
       let poX
       let poY
+      let scl
       let len = 50
       this.nowFrame++
       console.log(`アニメ ${this.nowFrame} 回目`)
@@ -159,9 +161,11 @@ export default {
       switch(type) {
         case 'top':
           poY = `-=${len}px`
+          scl = `*=0.8`
           break
         case 'bottom':
           poY = `+=${len}px`
+          scl = `*=1.2`
           break
         case 'left':
           poX = `-=${len}px`
@@ -177,6 +181,7 @@ export default {
         targets: '.avatar',
         translateX: poX,
         translateY: poY,
+        scale: scl,
         duration: 200,
         easing: 'easeInOutBack',
 
@@ -201,10 +206,13 @@ export default {
 
   .stage {
     width: 320px;
-    height: 160px;
+    height: 320px;
     background-color: #ccc;
     margin: 0 auto;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     .avatar {
       width: 100px;
