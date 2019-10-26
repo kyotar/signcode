@@ -5,8 +5,8 @@
     </header>
 
     <main>
-      <p>{{ isPlaying }}メッセージ {{ output }}</p>
-      <section>
+      <p>メッセージ {{ output }}</p>
+      <section class="stage">
         <img src="./assets/img/logo.png" class="avatar" alt="avatar">
       </section>
 
@@ -199,9 +199,17 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   text-align: center;
 
-  .avatar {
-    width: 100px;
-    height: auto;
+  .stage {
+    width: 320px;
+    height: 160px;
+    background-color: #ccc;
+    margin: 0 auto;
+    overflow: hidden;
+
+    .avatar {
+      width: 100px;
+      height: auto;
+    }
   }
 }
 
