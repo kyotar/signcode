@@ -20,6 +20,7 @@
         <ButtonIcon icon="⬅️" @method="addIcon" />
         <ButtonIcon icon="➡️" @method="addIcon" />
         <ButtonIcon icon="🤾" @method="addIcon" />
+        <ButtonIcon icon="🔄" @method="addIcon" />
       </section>
     </main>
 
@@ -154,14 +155,19 @@ export default {
         case '🤾':
           this.animate('jump')
           break
+        case '🔄':
+          this.animate('spin')
+          break
         default:
           this.output = `🚧コマンドエラーです。- ${val} -`
       }
     },
 
     animate(type) {
+      // デフォルト値
       let poX
       let poY
+      let roY
       let scl
       let len = 40
       let time = 200
@@ -188,10 +194,16 @@ export default {
           poX = `+=${ len }px`
           break
         case 'jump':
+          // poY = [`-=${ len * this.parse }px`]
           poY = ['+=0px', '+=4px', `-=${ len * this.parse }px`]
-          time = 400
+          time = 800
           ease = 'easeOutQuart'
           dire = 'alternate'
+          break
+        case 'spin':
+          roY = ['0deg', '360deg']
+          time = 400
+          ease = 'easeInOutQuint'
           break
         default:
           this.output = '🚧アニメーションエラーです'
@@ -201,6 +213,7 @@ export default {
         targets: '.avatar',
         translateX: poX,
         translateY: poY,
+        rotateY: roY,
         scale: scl,
         duration: time,
         easing: ease,

@@ -10,10 +10,10 @@
 | ⬇️        | 前に移動                      |
 | ⬅️        | 左に移動                      |
 | ➡️        | 右に移動                      |
-| 🔄        | 横回転（Coming Soon）         |
+| 🔄        | 横回転                        |
 | 🔃        | 縦回転（Coming Soon）         |
-| 🦶        | 足踏み🦶（Coming Soon）        |
-| 🤾        | ジャンプする（Coming Soon）   |
+| 🦶        | 足踏み（Coming Soon）         |
+| 🤾        | ジャンプする                  |
 | ⏱️        | 一定時間止まる（Coming Soon） |
 | 👏        | 拍手音（Coming Soon）         |
 | 👣        | タップ音（Coming Soon）       |
