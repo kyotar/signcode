@@ -21,6 +21,7 @@
         <ButtonIcon icon="➡️" @method="addIcon" />
         <ButtonIcon icon="🤾" @method="addIcon" />
         <ButtonIcon icon="🔄" @method="addIcon" />
+        <ButtonIcon icon="👣" @method="addIcon" />
       </section>
     </main>
 
@@ -158,6 +159,9 @@ export default {
         case '🔄':
           this.animate('spin')
           break
+        case '👣':
+          this.animate('step')
+          break
         default:
           this.output = `🚧コマンドエラーです。- ${val} -`
       }
@@ -194,7 +198,6 @@ export default {
           poX = `+=${ len }px`
           break
         case 'jump':
-          // poY = [`-=${ len * this.parse }px`]
           poY = ['+=0px', '+=4px', `-=${ len * this.parse }px`]
           time = 800
           ease = 'easeOutQuart'
@@ -204,6 +207,11 @@ export default {
           roY = ['0deg', '360deg']
           time = 400
           ease = 'easeInOutQuint'
+          break
+        case 'step':
+          poY = ['+=0px', '+=4px', '-=4px']
+          time = 200
+          dire = 'alternate'
           break
         default:
           this.output = '🚧アニメーションエラーです'
@@ -243,8 +251,9 @@ export default {
   height: 100%;
 
   .main {
-    width: 320px;
+    min-width: 320px;
     margin: 0 auto;
+    padding: 0 16px 80px 16px;
 
     .stage {
       width: 100%;
@@ -291,6 +300,7 @@ export default {
       color: $color-white;
       background-color: $color-primary;
       box-shadow: 0 -10px 10px rgba(0, 0, 0, .1);
+      transition: 0.5s all ease;
 
       &.disabled {
         color: rgba($color-white, 0.3);

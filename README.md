@@ -12,11 +12,11 @@
 | ➡️        | 右に移動                      |
 | 🔄        | 横回転                        |
 | 🔃        | 縦回転（Coming Soon）         |
-| 🦶        | 足踏み（Coming Soon）         |
+| 👣        | 足踏み                        |
 | 🤾        | ジャンプする                  |
 | ⏱️        | 一定時間止まる（Coming Soon） |
 | 👏        | 拍手音（Coming Soon）         |
-| 👣        | タップ音（Coming Soon）       |
+|          | タップ音（Coming Soon）       |
 | 🗣️        | ボイパ（Coming Soon）         |
 | 💬        | 吹き出しで喋る（Coming Soon） |
 | 👻        | 一定時間消える（Coming Soon） |
