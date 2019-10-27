@@ -19,6 +19,7 @@
         <ButtonIcon icon="⬇️" @method="addIcon" />
         <ButtonIcon icon="⬅️" @method="addIcon" />
         <ButtonIcon icon="➡️" @method="addIcon" />
+        <ButtonIcon icon="🤾" @method="addIcon" />
       </section>
     </main>
 
@@ -51,6 +52,7 @@ export default {
       instance: null,
       nowFrame: 0,
       maxFrame: 0,
+      parse: 2,
       isPlaying: false,
       isBreak: false,
     }
@@ -130,6 +132,7 @@ export default {
           this.output = 'もう一回、あそぶかい？'
           this.isPlaying = false
           this.isBreak = false
+          this.parse = 2
         }
       })
     },
@@ -148,6 +151,9 @@ export default {
         case '➡️':
           this.animate('right')
           break
+        case '🤾':
+          this.animate('jump')
+          break
         default:
           this.output = `🚧コマンドエラーです。- ${val} -`
       }
@@ -157,24 +163,35 @@ export default {
       let poX
       let poY
       let scl
-      let len = 50
+      let len = 40
+      let time = 200
+      let ease = 'easeInOutBack'
+      let dire = 'normal'
       this.nowFrame++
-      console.log(`アニメ ${this.nowFrame} 回目`)
+      console.info(`アニメ ${this.nowFrame} 回目`)
 
       switch(type) {
         case 'top':
-          poY = `-=${len}px`
-          scl = `*=0.8`
+          poY = `-=${ len }px`
+          scl = `*=0.9`
+          this.parse = this.parse * 0.8
           break
         case 'bottom':
-          poY = `+=${len}px`
-          scl = `*=1.2`
+          poY = `+=${ len }px`
+          scl = `*=1.1`
+          this.parse = this.parse * 1.2
           break
         case 'left':
-          poX = `-=${len}px`
+          poX = `-=${ len }px`
           break
         case 'right':
-          poX = `+=${len}px`
+          poX = `+=${ len }px`
+          break
+        case 'jump':
+          poY = ['+=0px', '+=4px', `-=${ len * this.parse }px`]
+          time = 400
+          ease = 'easeOutQuart'
+          dire = 'alternate'
           break
         default:
           this.output = '🚧アニメーションエラーです'
@@ -185,8 +202,9 @@ export default {
         translateX: poX,
         translateY: poY,
         scale: scl,
-        duration: 200,
-        easing: 'easeInOutBack',
+        duration: time,
+        easing: ease,
+        direction: dire,
 
         complete: () => {
           if(this.nowFrame < this.maxFrame) { // アニメーション終了後、次のアニメーションを開始
