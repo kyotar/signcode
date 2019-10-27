@@ -1,8 +1,8 @@
 <template>
   <section id="app">
-    <header>
+    <!-- <header>
       <h1>signcode</h1>
-    </header>
+    </header> -->
 
     <main class="main">
       <p>🐰{{ output }}</p>
@@ -21,6 +21,8 @@
         <ButtonIcon icon="➡️" @method="addIcon" />
         <ButtonIcon icon="🤾" @method="addIcon" />
         <ButtonIcon icon="🔄" @method="addIcon" />
+        <ButtonIcon icon="🤸‍♂️" @method="addIcon" />
+        <ButtonIcon icon="🤸‍♀️" @method="addIcon" style="transform: scale(-1, 1);" />
         <ButtonIcon icon="👣" @method="addIcon" />
       </section>
     </main>
@@ -159,6 +161,12 @@ export default {
         case '🔄':
           this.animate('spin')
           break
+        case '🤸‍♂️':
+          this.animate('cartwheel-L')
+          break
+        case '🤸‍♀️':
+          this.animate('cartwheel-R')
+          break
         case '👣':
           this.animate('step')
           break
@@ -171,6 +179,8 @@ export default {
       // デフォルト値
       let poX
       let poY
+      let ro
+      let roX
       let roY
       let scl
       let len = 40
@@ -182,19 +192,23 @@ export default {
 
       switch(type) {
         case 'top':
-          poY = `-=${ len }px`
+          poY = `-=10px`
+          roX = ['0deg', '30deg', '0deg']
           scl = `*=0.9`
           this.parse = this.parse * 0.8
           break
         case 'bottom':
-          poY = `+=${ len }px`
+          poY = `+=10px`
+          roX = ['0deg', '-30deg', '0deg']
           scl = `*=1.1`
           this.parse = this.parse * 1.2
           break
         case 'left':
+          ro = ['0deg', '-10deg', '0deg']
           poX = `-=${ len }px`
           break
         case 'right':
+          ro = ['0deg', '10deg', '0deg']
           poX = `+=${ len }px`
           break
         case 'jump':
@@ -205,6 +219,20 @@ export default {
           break
         case 'spin':
           roY = ['0deg', '360deg']
+          time = 400
+          ease = 'easeInOutQuint'
+          break
+        case 'cartwheel-L':
+          ro = ['0deg',  '-360deg']
+          poY = ['+=0px', '-=24px', '+=24px']
+          poX = `-=${ len }px`
+          time = 400
+          ease = 'easeInOutQuint'
+          break
+        case 'cartwheel-R':
+          ro = ['0deg',  '360deg']
+          poY = ['+=0px', '-=24px', '+=24px']
+          poX = `+=${ len }px`
           time = 400
           ease = 'easeInOutQuint'
           break
@@ -221,7 +249,9 @@ export default {
         targets: '.avatar',
         translateX: poX,
         translateY: poY,
+        rotate: ro,
         rotateY: roY,
+        rotateX: roX,
         scale: scl,
         duration: time,
         easing: ease,
