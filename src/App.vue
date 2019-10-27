@@ -4,14 +4,14 @@
       <h1>signcode</h1>
     </header>
 
-    <main>
-      <p>メッセージ {{ output }}</p>
+    <main class="main">
+      <p>🐰{{ output }}</p>
       <section class="stage">
-        <img src="./assets/img/logo.png" class="avatar" alt="avatar">
+        <img src="./assets/img/rabbit.png" class="avatar" alt="avatar">
       </section>
 
       <section>
-        <textarea v-model="input"></textarea>
+        <input type="text" placeholder="コマンドを入力してね" class="commandArea" v-model="input" disabled />
       </section>
 
       <section>
@@ -20,17 +20,14 @@
         <ButtonIcon icon="⬅️" @method="addIcon" />
         <ButtonIcon icon="➡️" @method="addIcon" />
       </section>
-
-      <section>
-        <button @click="action" :disabled="isDisabled || emptyInput || isMaxFrame">{{ btnLabel }}</button>
-        <!-- <button @click="pause">とめる</button> -->
-        <!-- <button @click="reset">ぜんぶけす</button> -->
-      </section>
     </main>
 
-    <footer>
-      <small>©signcode</small>
-    </footer>
+    <section class="naviBar">
+      <button class="naviBtn" :class="{ disabled: isDisabled }" @click="action" :disabled="isDisabled">{{ btnLabel }}</button>
+      <!-- <button >ひとつけす</button> -->
+      <!-- <button @click="pause">とめる</button> -->
+      <!-- <button @click="reset">ぜんぶけす</button> -->
+    </section>
   </section>
 </template>
 
@@ -38,8 +35,6 @@
 import split from 'graphemesplit'
 import anime from 'animejs/lib/anime.es.js'
 import ButtonIcon from './components/ButtonIcon.vue'
-
-
 
 export default {
   name: 'app',
@@ -52,24 +47,32 @@ export default {
     return {
       input: '',
       code: [],
-      output: '',
+      output: 'やぁ、こんにちは！',
       instance: null,
       nowFrame: 0,
       maxFrame: 0,
       isPlaying: false,
-      isDisabled: false,
+      isBreak: false,
     }
   },
 
   computed: {
+    // ナビボタンの名称
     btnLabel() {
       return this.isPlaying ? 'とめる' : 'うごかす'
     },
 
+    // 非アクティブ
+    isDisabled() {
+      return this.isBreak || this.emptyInput || this.isMaxFrame
+    },
+
+    // コマンドが空の場合
     emptyInput() {
       return !(split(this.input).length)
     },
 
+    // 最終フレームの場合
     isMaxFrame() {
       return (this.nowFrame === this.maxFrame) && (this.maxFrame > 0)
     },
@@ -95,6 +98,7 @@ export default {
       this.code = split(this.input)
       this.maxFrame = this.code.length
       this.isPlaying = true
+      this.output = 'レッツアニメーションスタート！'
       this.command(this.code[this.nowFrame])
     },
 
@@ -108,7 +112,7 @@ export default {
       this.code = []
       this.nowFrame = 0
       this.maxFrame = 0
-      this.isDisabled = true
+      this.isBreak = true
 
       anime({
         targets: '.avatar',
@@ -119,14 +123,13 @@ export default {
         easing: 'easeInBack',
 
         begin: () => {
-          this.isDisabled = true
-
+          this.isBreak = true
         },
 
         complete: () => {
-          this.output = ''
+          this.output = 'もう一回、あそぶかい？'
           this.isPlaying = false
-          this.isDisabled = false
+          this.isBreak = false
         }
       })
     },
@@ -189,7 +192,7 @@ export default {
           if(this.nowFrame < this.maxFrame) { // アニメーション終了後、次のアニメーションを開始
             this.command(this.code[this.nowFrame])
           } else if(this.nowFrame === this.maxFrame) { //アニメーション最後
-            this.output = '終了でーす'
+            this.output = 'アニメーション終了でーす'
             this.reset()
           }
         }
@@ -200,23 +203,67 @@ export default {
 </script>
 
 <style lang="scss">
+@import './assets/css/common.scss';
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   text-align: center;
+  background-color: $color-grayWhite;
+  height: 100%;
 
-  .stage {
+  .main {
     width: 320px;
-    height: 320px;
-    background-color: #ccc;
     margin: 0 auto;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
-    .avatar {
-      width: 100px;
-      height: auto;
+    .stage {
+      width: 100%;
+      height: 320px;
+      background-color: $color-white;
+      border-radius: 32px;
+      margin: 0 auto;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .avatar {
+        width: 100px;
+        height: auto;
+      }
+    }
+
+    .commandArea {
+      width: 100%;
+      padding: 8px;
+      margin: 16px 0;
+      border-radius: 16px;
+      font-size: $text-small;
+      background-color: $color-primaryDark;
+
+      &::placeholder {
+        color: $color-white;
+      }
+    }
+  }
+
+  .naviBar {
+    width: 100%;
+    bottom: 0;
+    position: fixed;
+
+    & > .naviBtn {
+      width: 100%;
+      padding: 16px 8px;
+      margin: 0;
+      font-size: $text-large;
+      font-weight: bold;
+      color: $color-white;
+      background-color: $color-primary;
+      box-shadow: 0 -10px 10px rgba(0, 0, 0, .1);
+
+      &.disabled {
+        color: rgba($color-white, 0.3);
+      }
     }
   }
 }
