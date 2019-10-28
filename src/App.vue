@@ -4,15 +4,17 @@
       <h1>signcode</h1>
     </header> -->
 
-    <main class="main">
-      <p>🐰{{ output }}</p>
-      <section class="stage">
-        <img src="./assets/img/rabbit.png" class="avatar" alt="avatar">
-      </section>
+    <section class="stage">
+      <img src="./assets/img/rabbit.png" class="avatar" alt="avatar">
+    </section>
 
-      <section>
-        <input type="text" placeholder="コマンドを入力してね" class="commandArea" v-model="input" disabled />
-      </section>
+    <main class="main">
+
+      <p>🐰{{ output }}</p>
+      <output class="commandArea">
+        <template v-if="placeholder">{{ placeholder }}</template>
+        <template v-if="input">{{ input }}</template>
+      </output>
 
       <section>
         <ButtonIcon icon="⬆️" @method="addIcon" />
@@ -25,6 +27,7 @@
         <ButtonIcon icon="🤸‍♀️" @method="addIcon" style="transform: scale(-1, 1);" />
         <ButtonIcon icon="👣" @method="addIcon" />
       </section>
+
     </main>
 
     <section class="naviBar">
@@ -66,6 +69,10 @@ export default {
     // ナビボタンの名称
     btnLabel() {
       return this.isPlaying ? 'とめる' : 'うごかす'
+    },
+
+    placeholder() {
+      return this.input ? '' : 'コマンドを入力してね'
     },
 
     // 非アクティブ
@@ -277,30 +284,31 @@ export default {
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   text-align: center;
-  background-color: $color-grayWhite;
+  background-color: #f1c40f;
   height: 100%;
 
-  .main {
-    min-width: 320px;
+  .stage {
+    width: 100vw;
+    height: 30vh;
+    background-color: #f1c40f;
     margin: 0 auto;
-    padding: 0 16px 80px 16px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    .stage {
-      width: 100%;
-      height: 320px;
-      background-color: $color-white;
-      border-radius: 32px;
-      margin: 0 auto;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      .avatar {
-        width: 100px;
-        height: auto;
-      }
+    .avatar {
+      width: 80px;
+      height: auto;
     }
+  }
+
+  .main {
+    background-color: $color-grayWhite;
+    border-radius: 32px;
+    height: 70vh;
+    padding: 16px;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2), 0 0 16px 0 rgba(0, 0, 0, 0.2);
 
     .commandArea {
       width: 100%;
@@ -308,7 +316,9 @@ export default {
       margin: 16px 0;
       border-radius: 16px;
       font-size: $text-small;
-      background-color: $color-primaryDark;
+      background-color: #eee;
+      display: block;
+      line-height: 1.5;
 
       &::placeholder {
         color: $color-white;
@@ -329,7 +339,7 @@ export default {
       font-weight: bold;
       color: $color-white;
       background-color: $color-primary;
-      box-shadow: 0 -10px 10px rgba(0, 0, 0, .1);
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2), 0 0 16px 0 rgba(0, 0, 0, 0.2);
       transition: 0.5s all ease;
 
       &.disabled {
