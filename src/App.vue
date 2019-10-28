@@ -212,9 +212,9 @@ export default {
           poX = `+=${ len }px`
           break
         case 'jump':
-          poY = ['+=0px', '+=4px', `-=${ len * this.parse }px`]
-          time = 800
-          ease = 'easeOutQuart'
+          poY = [`-=${ len * this.parse }px`]
+          time = 400
+          ease = 'easeOutCirc'
           dire = 'alternate'
           break
         case 'spin':
