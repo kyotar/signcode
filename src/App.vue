@@ -95,10 +95,12 @@ export default {
   },
 
   methods: {
+    // 絵文字追加
     addIcon(icon) {
       this.input = this.input + icon
     },
 
+    // 再生ボタン
     action() {
       if(this.isPlaying) {
         this.pause()
@@ -107,6 +109,7 @@ export default {
       }
     },
 
+    // 再生ボタンをタップしたとき
     play() {
       this.code = split(this.input)
       this.maxFrame = this.code.length
@@ -115,11 +118,13 @@ export default {
       this.command(this.code[this.nowFrame])
     },
 
+    // 一時停止
     pause() {
       this.instance.pause()
       this.isPlaying = false
     },
 
+    // リセット
     reset() {
       this.input = ''
       this.code = []
@@ -135,6 +140,7 @@ export default {
         duration: 1000,
         easing: 'easeInBack',
 
+        // 即時にボタン操作を不能
         begin: () => {
           this.isBreak = true
         },
@@ -149,40 +155,14 @@ export default {
     },
 
     command(val) {
-      switch(val) {
-        case '⬆️':
-          this.animate('top')
-          break
-        case '⬇️':
-          this.animate('bottom')
-          break
-        case '⬅️':
-          this.animate('left')
-          break
-        case '➡️':
-          this.animate('right')
-          break
-        case '🤾':
-          this.animate('jump')
-          break
-        case '🔄':
-          this.animate('spin')
-          break
-        case '🤸‍♂️':
-          this.animate('cartwheel-L')
-          break
-        case '🤸‍♀️':
-          this.animate('cartwheel-R')
-          break
-        case '👣':
-          this.animate('step')
-          break
-        default:
-          this.output = `🚧コマンドエラーです。- ${val} -`
+      if(val){
+        this.animate(val)
+      } else {
+        this.output = `🚧コマンドエラーです。- ${val} -`
       }
     },
 
-    animate(type) {
+    animate(val) {
       // デフォルト値
       let poX
       let poY
@@ -197,53 +177,53 @@ export default {
       this.nowFrame++
       console.info(`アニメ ${this.nowFrame} 回目`)
 
-      switch(type) {
-        case 'top':
+      switch(val) {
+        case '⬆️':
           poY = `-=10px`
           roX = ['0deg', '30deg', '0deg']
           scl = `*=0.9`
           this.parse = this.parse * 0.8
           break
-        case 'bottom':
+        case '⬇️':
           poY = `+=10px`
           roX = ['0deg', '-30deg', '0deg']
           scl = `*=1.1`
           this.parse = this.parse * 1.2
           break
-        case 'left':
+        case '⬅️':
           ro = ['0deg', '-10deg', '0deg']
           poX = `-=${ len }px`
           break
-        case 'right':
+        case '➡️':
           ro = ['0deg', '10deg', '0deg']
           poX = `+=${ len }px`
           break
-        case 'jump':
+        case '🤾':
           poY = [`-=${ len * this.parse }px`]
           time = 400
           ease = 'easeOutCirc'
           dire = 'alternate'
           break
-        case 'spin':
+        case '🔄':
           roY = ['0deg', '360deg']
           time = 400
           ease = 'easeInOutQuint'
           break
-        case 'cartwheel-L':
+        case '🤸‍♂️':
           ro = ['0deg',  '-360deg']
           poY = ['+=0px', '-=24px', '+=24px']
           poX = `-=${ len }px`
           time = 400
           ease = 'easeInOutQuint'
           break
-        case 'cartwheel-R':
+        case '🤸‍♀️':
           ro = ['0deg',  '360deg']
           poY = ['+=0px', '-=24px', '+=24px']
           poX = `+=${ len }px`
           time = 400
           ease = 'easeInOutQuint'
           break
-        case 'step':
+        case '👣':
           poY = ['+=0px', '+=4px', '-=4px']
           time = 200
           dire = 'alternate'
