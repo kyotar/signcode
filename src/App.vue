@@ -1,19 +1,24 @@
 <template>
   <section id="app">
-    <!-- <header>
-      <h1>signcode</h1>
-    </header> -->
-
     <section class="stage">
       <img src="./assets/img/rabbit.png" class="avatar" alt="avatar">
     </section>
 
     <main class="main">
-
       <p>🐰{{ output }}</p>
       <output class="commandArea">
-        <template v-if="placeholder">{{ placeholder }}</template>
-        <template v-if="input">{{ input }}</template>
+        <template v-if="input.length > 0">
+          <span v-for="(icon, index) in input"
+            :key="index"
+            class="icon"
+            :class="{ nowIcon: (index === nowFrame && isPlaying), upsideDown: icon === '🤸‍♀️' }"
+          >
+            {{ icon }}
+          </span>
+        </template>
+        <template v-else>
+          コマンドを入力してね
+        </template>
       </output>
 
       <section>
@@ -24,7 +29,7 @@
         <ButtonIcon icon="🤾" @method="addIcon" />
         <ButtonIcon icon="🔄" @method="addIcon" />
         <ButtonIcon icon="🤸‍♂️" @method="addIcon" />
-        <ButtonIcon icon="🤸‍♀️" @method="addIcon" style="transform: scale(-1, 1);" />
+        <ButtonIcon icon="🤸‍♀️" @method="addIcon" class="upsideDown" />
         <ButtonIcon icon="👣" @method="addIcon" />
       </section>
 
@@ -40,7 +45,7 @@
 </template>
 
 <script>
-import split from 'graphemesplit'
+// import split from 'graphemesplit'
 import anime from 'animejs/lib/anime.es.js'
 import ButtonIcon from './components/ButtonIcon.vue'
 
@@ -53,7 +58,7 @@ export default {
 
   data() {
     return {
-      input: '',
+      input: [],
       code: [],
       output: 'やぁ、こんにちは！',
       instance: null,
@@ -72,7 +77,7 @@ export default {
     },
 
     placeholder() {
-      return this.input ? '' : 'コマンドを入力してね'
+      return this.input.length === 0 ? '' : 'コマンドを入力してね'
     },
 
     // 非アクティブ
@@ -82,7 +87,7 @@ export default {
 
     // コマンドが空の場合
     emptyInput() {
-      return !(split(this.input).length)
+      return !(this.input.length)
     },
 
     // 最終フレームの場合
@@ -97,7 +102,7 @@ export default {
   methods: {
     // 絵文字追加
     addIcon(icon) {
-      this.input = this.input + icon
+      this.input.push(icon)
     },
 
     // 再生ボタン
@@ -111,11 +116,10 @@ export default {
 
     // 再生ボタンをタップしたとき
     play() {
-      this.code = split(this.input)
-      this.maxFrame = this.code.length
+      this.maxFrame = this.input.length
       this.isPlaying = true
       this.output = 'レッツアニメーションスタート！'
-      this.command(this.code[this.nowFrame])
+      this.command(this.input[this.nowFrame])
     },
 
     // 一時停止
@@ -126,7 +130,7 @@ export default {
 
     // リセット
     reset() {
-      this.input = ''
+      this.input = []
       this.code = []
       this.nowFrame = 0
       this.maxFrame = 0
@@ -246,7 +250,7 @@ export default {
 
         complete: () => {
           if(this.nowFrame < this.maxFrame) { // アニメーション終了後、次のアニメーションを開始
-            this.command(this.code[this.nowFrame])
+            this.command(this.input[this.nowFrame])
           } else if(this.nowFrame === this.maxFrame) { //アニメーション最後
             this.output = 'アニメーション終了でーす'
             this.reset()
@@ -264,13 +268,13 @@ export default {
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   text-align: center;
-  background-color: #f1c40f;
+  background-color: $color-grayWhite;
   height: 100%;
 
   .stage {
-    width: 100vw;
-    height: 30vh;
-    background-color: #f1c40f;
+    min-width: 320px;
+    min-height: 320px;
+    background-color: $color-grayWhite;
     margin: 0 auto;
     overflow: hidden;
     display: flex;
@@ -296,12 +300,23 @@ export default {
       margin: 16px 0;
       border-radius: 16px;
       font-size: $text-small;
-      background-color: #eee;
+      background-color: $color-gray;
       display: block;
       line-height: 1.5;
 
       &::placeholder {
         color: $color-white;
+      }
+
+      .icon {
+        display: inline-block;
+        padding: 4px;
+        border-radius: 4px;
+        transition: all .5s ease;
+
+        &.nowIcon {
+          background-color: rgba($color-primary, .3);
+        }
       }
     }
   }
@@ -326,6 +341,10 @@ export default {
         color: rgba($color-white, 0.3);
       }
     }
+  }
+
+  .upsideDown {
+    transform: scale(-1, 1);
   }
 }
 
