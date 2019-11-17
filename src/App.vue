@@ -207,7 +207,7 @@ export default {
         case '🤾':
           poY = [`-=${ len * this.parse }px`]
           time = 400
-          ease = 'easeOutCirc'
+          ease = 'cubicBezier(0.540, -0.320, 0.540, 1.320)'
           dire = 'alternate'
           break
         case '🔄':
@@ -305,6 +305,7 @@ export default {
       background-color: $color-gray;
       display: block;
       line-height: 1.5;
+      text-align: left;
 
       &::placeholder {
         color: $color-white;
