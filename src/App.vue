@@ -97,6 +97,8 @@ export default {
   },
 
   mounted() {
+    // iOSでタップカラーを変更させるための設定
+    document.addEventListener('touchstart', () => {}, { passive: true })
   },
 
   methods: {
