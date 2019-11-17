@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "deploy": "npm run build && git add . && git commit -a -m 'docs update'",
+    "deploy": "npm run build && git add . && git commit -a -m 'docs update' && git push origin master",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
