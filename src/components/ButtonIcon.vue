@@ -1,5 +1,5 @@
 <template>
-  <button type="button" class="btn" :class="{ upsideDown: type === 'upsideDown' }" @click="method">
+  <button type="button" class="btn" :class="{ upsideDown: type === 'upsideDown' }" :disabled="disabled" @click="method">
     {{ icon }}
   </button>
 </template>
@@ -16,6 +16,10 @@ export default {
     type: {
       type: String,
       required: false,
+    },
+    disabled: {
+      type: Boolean,
+      required: true,
     },
   },
 
@@ -54,6 +58,10 @@ export default {
     &:active {
       transform: scale(-0.75, 0.75);
     }
+  }
+
+  &[disabled] {
+    opacity: .3;
   }
 }
 </style>

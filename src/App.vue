@@ -2,38 +2,43 @@
   <section id="app">
     <section class="stage">
       <img src="./assets/img/rabbit.png" class="avatar" alt="avatar">
-    </section>
 
-    <main class="main">
-      <!-- <p>🐰{{ output }}</p> -->
-      <output class="commandArea">
+      <output class="commandArea" :class="{ commnadPlaying: isPlaying }">
         <template v-if="input.length > 0">
           <span v-for="(icon, index) in input"
-            :key="index"
-            class="icon"
-            :class="{ nowIcon: (index === nowFrame - 1 && isPlaying), upsideDown: icon === '🤸‍♀️' }"
+          :key="index"
+          class="icon"
+          :class="{ nowIcon: (index === nowFrame - 1 && isPlaying), upsideDown: icon === '🤸‍♀️' }"
           >
-            {{ icon }}
-          </span>
-        </template>
-        <template v-else>
-          コマンドを入力してね
-        </template>
-      </output>
+          {{ icon }}
+        </span>
+      </template>
+      <template v-else>
+        コマンドを入力してね
+      </template>
+      <span class="numberInfo">
+        {{ input.length }} / {{limtiFrame}}
+      </span>
+    </output>
+    </section>
 
-      <section>
-        <ButtonIcon icon="⬆️" @method="addIcon" />
-        <ButtonIcon icon="⬇️" @method="addIcon" />
-        <ButtonIcon icon="⬅️" @method="addIcon" />
-        <ButtonIcon icon="➡️" @method="addIcon" />
-        <ButtonIcon icon="🤾" @method="addIcon" />
-        <ButtonIcon icon="🔄" @method="addIcon" />
-        <ButtonIcon icon="🤸‍♂️" @method="addIcon" />
-        <ButtonIcon icon="🤸‍♀️" @method="addIcon" type="upsideDown" />
-        <ButtonIcon icon="👣" @method="addIcon" />
-      </section>
 
-    </main>
+  <section class="controller">
+    <!-- <p>🐰{{ output }}</p> -->
+
+    <section>
+      <ButtonIcon icon="⬆️" @method="addIcon" :disabled="isLimitOver" />
+      <ButtonIcon icon="⬇️" @method="addIcon" :disabled="isLimitOver" />
+      <ButtonIcon icon="⬅️" @method="addIcon" :disabled="isLimitOver" />
+      <ButtonIcon icon="➡️" @method="addIcon" :disabled="isLimitOver" />
+      <ButtonIcon icon="🤾" @method="addIcon" :disabled="isLimitOver" />
+      <ButtonIcon icon="🔄" @method="addIcon" :disabled="isLimitOver" />
+      <ButtonIcon icon="🤸‍♂️" @method="addIcon" :disabled="isLimitOver" />
+      <ButtonIcon icon="🤸‍♀️" @method="addIcon" :disabled="isLimitOver" type="upsideDown" />
+      <ButtonIcon icon="👣" @method="addIcon" :disabled="isLimitOver" />
+    </section>
+
+  </section>
 
     <section class="naviBar">
       <button class="naviBtn" :class="{ disabled: isDisabled }" @click="action" :disabled="isDisabled">{{ btnLabel }}</button>
@@ -64,6 +69,7 @@ export default {
       instance: null,
       nowFrame: 0,
       maxFrame: 0,
+      limtiFrame: 24,
       parse: 2,
       isPlaying: false,
       isBreak: false,
@@ -83,6 +89,11 @@ export default {
     // 非アクティブ
     isDisabled() {
       return this.isBreak || this.emptyInput || this.isMaxFrame
+    },
+
+    // コマンド数オーバー
+    isLimitOver() {
+      return this.input.length >= this.limtiFrame
     },
 
     // コマンドが空の場合
@@ -269,43 +280,42 @@ export default {
 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  color: $color-black;
   text-align: center;
   background-color: $color-grayWhite;
   height: 100%;
 
+  // ステージ
   .stage {
     min-width: 320px;
-    min-height: 320px;
+    min-height: 240px;
     background-color: $color-grayWhite;
     margin: 0 auto;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 
     .avatar {
       width: 80px;
       height: auto;
     }
-  }
 
-  .main {
-    background-color: $color-grayWhite;
-    border-radius: 32px;
-    height: 70vh;
-    padding: 16px;
-    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2), 0 0 16px 0 rgba(0, 0, 0, 0.2);
-
+    // コマンド
     .commandArea {
-      width: 100%;
-      padding: 8px;
+      width: 264px;
+      padding: 8px 56px 8px 8px;
       margin: 16px 0;
       border-radius: 16px;
-      font-size: $text-small;
-      background-color: $color-gray;
+      background-color: rgba($color-gray, .5);
       display: block;
-      line-height: 1.5;
       text-align: left;
+      position: relative;
+      font-size: $text-small;
+      line-height: 1.5;
+      bottom: 16px;
+      position: absolute;
 
       &::placeholder {
         color: $color-white;
@@ -325,9 +335,31 @@ export default {
           transform: scale(-1, 1);
         }
       }
+
+      .numberInfo {
+        position: absolute;
+        top: 8px;
+        right: 16px;
+        color: $color-grayDark;
+      }
+
+      &.commnadPlaying {
+        opacity: .5;
+      }
     }
   }
 
+  // コントローラー
+  .controller {
+    background-color: $color-grayWhite;
+    border-radius: 32px;
+    margin: 16px 8px;
+    padding: 16px;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2), 0 0 16px 0 rgba(0, 0, 0, 0.2);
+    position: fixed;
+  }
+
+  // ナビゲーションバー
   .naviBar {
     width: 100%;
     bottom: 0;
@@ -350,6 +382,4 @@ export default {
     }
   }
 }
-
-
 </style>
