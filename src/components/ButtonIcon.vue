@@ -1,5 +1,7 @@
 <template>
-  <button type="button" class="btn" @click="method">{{ icon }}</button>
+  <button type="button" class="btn" :class="{ upsideDown: type === 'upsideDown' }" @click="method">
+    {{ icon }}
+  </button>
 </template>
 
 <script>
@@ -7,7 +9,14 @@ export default {
   name: 'ButtonIcon',
 
   props: {
-    icon: String
+    icon: {
+      type: String,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: false,
+    },
   },
 
   methods: {
@@ -35,9 +44,16 @@ export default {
   transition: all .2s ease-in;
 
   &:active {
-    // font-size: 24px;
-    transform: scale(0.9, 0.9);
+    transform: scale(0.75, 0.75);
     background-color: $color-gray;
+  }
+
+  // 反転
+  &.upsideDown {
+    transform: scale(-1, 1);
+    &:active {
+      transform: scale(-0.75, 0.75);
+    }
   }
 }
 </style>

@@ -5,13 +5,13 @@
     </section>
 
     <main class="main">
-      <p>🐰{{ output }}</p>
+      <!-- <p>🐰{{ output }}</p> -->
       <output class="commandArea">
         <template v-if="input.length > 0">
           <span v-for="(icon, index) in input"
             :key="index"
             class="icon"
-            :class="{ nowIcon: (index === nowFrame && isPlaying), upsideDown: icon === '🤸‍♀️' }"
+            :class="{ nowIcon: (index === nowFrame - 1 && isPlaying), upsideDown: icon === '🤸‍♀️' }"
           >
             {{ icon }}
           </span>
@@ -29,7 +29,7 @@
         <ButtonIcon icon="🤾" @method="addIcon" />
         <ButtonIcon icon="🔄" @method="addIcon" />
         <ButtonIcon icon="🤸‍♂️" @method="addIcon" />
-        <ButtonIcon icon="🤸‍♀️" @method="addIcon" class="upsideDown" />
+        <ButtonIcon icon="🤸‍♀️" @method="addIcon" type="upsideDown" />
         <ButtonIcon icon="👣" @method="addIcon" />
       </section>
 
@@ -73,7 +73,7 @@ export default {
   computed: {
     // ナビボタンの名称
     btnLabel() {
-      return this.isPlaying ? 'とめる' : 'うごかす'
+      return this.isPlaying ? 'Stop' : 'Start'
     },
 
     placeholder() {
@@ -206,7 +206,7 @@ export default {
           break
         case '🤾':
           poY = [`-=${ len * this.parse }px`]
-          time = 400
+          time = 300
           ease = 'cubicBezier(0.540, -0.320, 0.540, 1.320)'
           dire = 'alternate'
           break
@@ -320,6 +320,10 @@ export default {
         &.nowIcon {
           background-color: rgba($color-primary, .3);
         }
+
+        &.upsideDown {
+          transform: scale(-1, 1);
+        }
       }
     }
   }
@@ -344,10 +348,6 @@ export default {
         color: rgba($color-white, 0.3);
       }
     }
-  }
-
-  .upsideDown {
-    transform: scale(-1, 1);
   }
 }
 
