@@ -5,21 +5,24 @@
 
       <output class="commandArea" :class="{ commnadPlaying: isPlaying }">
         <template v-if="input.length > 0">
-          <span v-for="(icon, index) in input"
-          :key="index"
-          class="icon"
-          :class="{ nowIcon: (index === nowFrame - 1 && isPlaying), upsideDown: icon === '🤸‍♀️' }"
-          >
-          {{ icon }}
+          <transition-group name="list" tag="p">
+            <span v-for="(icon, index) in input"
+              :key="index"
+              class="icon"
+              :class="{ nowIcon: (index === nowFrame - 1 && isPlaying), upsideDown: icon === '🤸‍♀️' }"
+              >
+              {{ icon }}
+            </span>
+           </transition-group>
+          </template>
+        <template v-else>
+          コマンドを入力してね
+        </template>
+        <span class="numberInfo">
+          {{ input.length }} / {{limtiFrame}}
         </span>
-      </template>
-      <template v-else>
-        コマンドを入力してね
-      </template>
-      <span class="numberInfo">
-        {{ input.length }} / {{limtiFrame}}
-      </span>
-    </output>
+        <span class="delBtn" @click="delIcon" :class="{ disabled: (input.length === 0) || isPlaying }">🔨</span>
+      </output>
     </section>
 
 
@@ -116,6 +119,13 @@ export default {
     // 絵文字追加
     addIcon(icon) {
       this.input.push(icon)
+    },
+
+    // 絵文字削除
+    delIcon() {
+      if(!this.isPlaying && this.input.length > 0) {
+        this.input.pop()
+      }
     },
 
     // 再生ボタン
@@ -283,13 +293,13 @@ export default {
   color: $color-black;
   text-align: center;
   background-color: $color-grayWhite;
-  height: 100%;
+  min-height: 100%;
 
   // ステージ
   .stage {
     min-width: 320px;
     min-height: 240px;
-    background-color: $color-grayWhite;
+    background-color: rgba($color-primary, .1);
     margin: 0 auto;
     overflow: hidden;
     display: flex;
@@ -305,6 +315,7 @@ export default {
     // コマンド
     .commandArea {
       width: 264px;
+      min-height: 48px;
       padding: 8px 56px 8px 8px;
       margin: 16px 0;
       border-radius: 16px;
@@ -316,6 +327,7 @@ export default {
       line-height: 1.5;
       bottom: 16px;
       position: absolute;
+      transition: all .5s ease;
 
       &::placeholder {
         color: $color-white;
@@ -343,20 +355,47 @@ export default {
         color: $color-grayDark;
       }
 
+      .delBtn {
+        font-size: $text-medium;
+        position: absolute;
+        top: 12px;
+        right: -32px;
+        transition: all .3s ease;
+
+        &:active {
+          transform: scale(0.5, 0.5);
+        }
+
+        &.disabled {
+          opacity: .5;
+          pointer-events: none;
+        }
+      }
+
       &.commnadPlaying {
-        opacity: .5;
+        opacity: .3;
+      }
+    }
+
+    .list {
+      &-enter-active, &-leave-active {
+        transition: all 1s cubic-bezier(0.450, -0.435, 0.635, 1.405);
+      }
+      &-enter, &-leave-to {
+        transform: translateX(16px) scale(0.1, 0.1);
       }
     }
   }
 
   // コントローラー
   .controller {
-    background-color: $color-grayWhite;
-    border-radius: 32px;
+    // background-color: $color-grayWhite;
+    // border-radius: 32px;
     margin: 16px 8px;
-    padding: 16px;
-    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2), 0 0 16px 0 rgba(0, 0, 0, 0.2);
-    position: fixed;
+    // padding: 16px;
+    // box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2), 0 0 16px 0 rgba(0, 0, 0, 0.2);
+    // position: fixed;
+    // bottom: 64px;
   }
 
   // ナビゲーションバー
@@ -382,4 +421,6 @@ export default {
     }
   }
 }
+
+
 </style>
